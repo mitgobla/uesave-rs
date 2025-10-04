@@ -107,7 +107,7 @@ fn read_string<R: Read + Seek, V>(reader: &mut Context<R, V>) -> TResult<String>
     if len < 0 {
         let chars = read_array((-len) as u32, reader, |r| Ok(r.read_u16::<LE>()?))?;
         let length = chars.iter().position(|&c| c == 0).unwrap_or(chars.len());
-        Ok(String::from_utf16_lossy(&chars[..length]).unwrap())
+        Ok(String::from_utf16_lossy(&chars[..length]))
     } else {
         let mut chars = vec![0; len as usize];
         reader.read_exact(&mut chars)?;
@@ -147,7 +147,7 @@ fn read_string_trailing<R: Read + Seek, V>(
             rest.push(reader.read_u8()?);
             read += 1;
         }
-        Ok((String::from_utf16_lossy(&chars).unwrap(), rest))
+        Ok((String::from_utf16_lossy(&chars), rest))
     } else {
         let bytes = len as usize;
         let mut chars = vec![];
